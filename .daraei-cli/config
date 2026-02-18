@@ -1,0 +1,9 @@
+# daraei-cli project config
+# Example:
+# SERVER=http://185.226.119.19:9090
+# PROJECT=webinar-front
+# TOKEN=your-generated-token
+
+SERVER=http://185.226.119.19:9090
+PROJECT=job-path-ai
+TOKEN=6a14b500475e025ae2d16538c849a7fe420a9554f5a4b7e9

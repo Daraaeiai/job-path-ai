@@ -1,15 +1,20 @@
 @import "tailwindcss";
+@plugin "tailwindcss-animate";
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --mobile-max: 430px;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-iranyekan), system-ui, sans-serif;
+  --font-mono: ui-monospace, monospace;
+  --font-morabba: var(--font-morabba), var(--font-iranyekan), sans-serif;
+  --font-agbalumo: var(--font-agbalumo), sans-serif;
+  --font-iranyekan: var(--font-iranyekan), system-ui, sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,5 +27,38 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-iranyekan), system-ui, sans-serif;
+}
+
+/* Mobile-only: حداکثر عرض در دسکتاپ برابر با سایز موبایل */
+.mobile-only-container {
+  width: 100%;
+  max-width: var(--mobile-max);
+  min-height: 100dvh;
+  margin-inline: auto;
+}
+
+/* @media (min-width: 431px) {
+  .mobile-only-container {
+    box-shadow: 0 0 24px rgba(0, 0, 0, 0.08);
+  }
+} */
+
+.font-morabba {
+  font-family: var(--font-morabba), var(--font-iranyekan), sans-serif;
+}
+.font-agbalumo {
+  font-family: var(--font-agbalumo), sans-serif;
+}
+.font-iranyekan {
+  font-family: var(--font-iranyekan), system-ui, sans-serif;
+}
+
+* {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+*::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }

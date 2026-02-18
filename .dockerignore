@@ -1,0 +1,12 @@
+.git
+.gitignore
+.env
+.env.*
+node_modules
+.next
+npm-debug.log*
+.DS_Store
+*.md
+!DOCKER.md
+.cursor
+terminals
