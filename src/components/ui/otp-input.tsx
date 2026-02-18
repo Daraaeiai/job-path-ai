@@ -159,7 +159,7 @@ export function OTPInput({
           disabled={disabled}
           autoComplete={index === 0 ? "one-time-code" : "off"}
           className={cn(
-            "w-10 h-12 text-center text-xl font-bold rounded-2xl border border-stone-300 bg-background font-iranyekan transition-all outline-none",
+            "w-10 h-12 text-center text-xl font-bold rounded-2xl border border-stone-300 bg-transparent font-iranyekan transition-all outline-none",
             "text-zinc-800 placeholder:text-neutral-400",
             error
               ? "border-red-500 bg-red-50"
