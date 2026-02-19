@@ -46,6 +46,10 @@ export function OTPInput({
   }, [value, length, disabled]);
 
   useEffect(() => {
+    if (value.length < length) isProcessingRef.current = false;
+  }, [value.length, length]);
+
+  useEffect(() => {
     if (value.length === length && onComplete && !isProcessingRef.current) {
       isProcessingRef.current = true;
       onComplete(value);

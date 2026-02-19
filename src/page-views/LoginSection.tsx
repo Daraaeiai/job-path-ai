@@ -144,8 +144,10 @@ export function LoginSection() {
         router.push("/survey");
         return;
       }
+      setOtp("");
       setError(data?.error ?? "کد تایید اشتباه یا منقضی است");
     } catch {
+      setOtp("");
       setError("خطا در ارتباط با سرور");
     } finally {
       setLoading(false);
