@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { siteConfig } from "@/lib/data/site";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { OTPInput } from "@/components/ui/otp-input";
 import { cn, toPersianDigits, toEnglishDigits } from "@/lib/utils";
 import Image from "next/image";
+import { Pencil } from "lucide-react";
 import { authService } from "@/lib/services/auth.service";
 
 const phoneRegex = /^09\d{9}$/;
@@ -31,6 +32,7 @@ export function LoginSection() {
   const [needFullName, setNeedFullName] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [otpCountdown, setOtpCountdown] = useState(0);
 
   const phoneClean = phone.replace(/\D/g, "");
   const phoneValid = phoneRegex.test(phoneClean);
@@ -61,6 +63,7 @@ export function LoginSection() {
       const data = res as { success?: boolean; exists?: boolean; error?: string };
       if (data?.success && data?.exists) {
         setPhoneConfirmed(true);
+        setOtpCountdown(60);
       } else if (data?.success && data?.exists === false) {
         setNeedFullName(true);
       } else {
@@ -86,6 +89,7 @@ export function LoginSection() {
       if (data?.success) {
         setPhoneConfirmed(true);
         setNeedFullName(false);
+        setOtpCountdown(60);
       } else {
         setError(data?.error ?? "خطا در ثبت و ارسال کد");
       }
@@ -95,6 +99,38 @@ export function LoginSection() {
       setLoading(false);
     }
   }, [nameValid, phoneClean, fullNameTrimmed]);
+
+  const handleEditPhone = useCallback(() => {
+    setPhoneConfirmed(false);
+    setNeedFullName(false);
+    setOtp("");
+    setError("");
+  }, []);
+
+  const handleResendOtp = useCallback(async () => {
+    if (otpCountdown > 0) return;
+    setError("");
+    setLoading(true);
+    try {
+      const res = await authService.checkPhone(phoneClean);
+      const data = res as { success?: boolean; exists?: boolean; error?: string };
+      if (data?.success && data?.exists) {
+        setOtpCountdown(60);
+      } else {
+        setError(data?.error ?? "خطا در ارسال مجدد کد");
+      }
+    } catch {
+      setError("خطا در ارتباط با سرور");
+    } finally {
+      setLoading(false);
+    }
+  }, [phoneClean, otpCountdown]);
+
+  useEffect(() => {
+    if (!showOtpInput || otpCountdown <= 0) return;
+    const t = setInterval(() => setOtpCountdown((c) => (c <= 0 ? 0 : c - 1)), 1000);
+    return () => clearInterval(t);
+  }, [showOtpInput, otpCountdown]);
 
   const handleVerifyAndLogin = useCallback(async (code?: string) => {
     const otpToVerify = code ?? otp;
@@ -207,10 +243,21 @@ export function LoginSection() {
         )}
 
         {showOtpInput && (
-          <div className="flex flex-col gap-2">
-            <label className="text-zinc-800 text-sm font-normal font-iranyekan">
-              {siteConfig.otpLabel}
-            </label>
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center justify-between px-8">
+              <label className="text-zinc-800 text-sm font-normal font-iranyekan">
+                {siteConfig.otpLabel}
+              </label>
+              <button
+                type="button"
+                onClick={handleEditPhone}
+                className="flex items-center justify-center gap-1.5 text-zinc-700 text-sm font-iranyekan cursor-pointer"
+              >
+                <span>{toPersianDigits(phone)}</span>
+                <Pencil className="w-3.5 h-3.5" />
+              </button>
+            </div>
+
             <OTPInput
               length={6}
               value={otp}
@@ -223,6 +270,20 @@ export function LoginSection() {
               <p className="text-xs text-red-600 font-iranyekan">
                 کد تایید باید ۶ رقم باشد
               </p>
+            )}
+            {otpCountdown > 0 ? (
+              <p className="text-xs text-neutral-500 font-iranyekan text-center">
+                ارسال مجدد کد تا {Math.floor(otpCountdown / 60)}:{(otpCountdown % 60).toString().padStart(2, "0")}
+              </p>
+            ) : (
+              <button
+                type="button"
+                onClick={handleResendOtp}
+                disabled={loading}
+                className="text-sm font-iranyekan cursor-pointer text-[#6F805C] underline disabled:opacity-50"
+              >
+                {siteConfig.resendOtpButton}
+              </button>
             )}
           </div>
         )}

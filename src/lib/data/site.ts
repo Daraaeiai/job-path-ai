@@ -24,4 +24,5 @@ export const siteConfig = {
   fullNameLabel: "نام و نام خانوادگی",
   fullNamePlaceholder: "نام و نام خانوادگی",
   submitNameAndSendOtp: "تایید و ارسال کد",
+  resendOtpButton: "ارسال مجدد کد",
 } as const;

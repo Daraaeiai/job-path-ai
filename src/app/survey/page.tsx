@@ -131,7 +131,7 @@ export default function SurveyPage() {
             className="w-8 h-8 p-1 shrink-0 bg-stone-100 rounded-lg flex items-center justify-center"
             aria-label="سوال قبلی"
           >
-            <ChevronRight />
+            <ChevronRight className="text-black" />
           </button>
         ) : (
           <Link
@@ -139,7 +139,7 @@ export default function SurveyPage() {
             className="w-8 h-8 p-1 shrink-0 bg-stone-100 rounded-lg flex items-center justify-center"
             aria-label="بازگشت"
           >
-            <ChevronRight />
+            <ChevronRight className="text-black" />
           </Link>
         )}
         <div className="flex-1 flex items-center gap-2">
